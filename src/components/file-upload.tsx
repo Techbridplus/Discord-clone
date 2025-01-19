@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import "@uploadthing/react/styles.css";
+// import "@uploadthing/react/styles.css"; ye line lagane se kuch bug aaraha hai...
 import { FileIcon, X } from "lucide-react";
 import Image from "next/image";
 

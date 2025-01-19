@@ -2,9 +2,8 @@ import { ClerkProvider } from '@clerk/nextjs'
 import './globals.css'
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { ModalProvider } from "@/components/providers/modal-provider";
-import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
-import { extractRouterConfig } from "uploadthing/server";
-import { ourFileRouter } from "@/app/api/uploadthing/core";
+import { QueryProvider } from "@/components/providers/query-provider";
+
 export default function RootLayout({
   children,
 }: {
@@ -21,10 +20,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ModalProvider/>
-          <NextSSRPlugin
-          routerConfig={extractRouterConfig(ourFileRouter)}
-          />
-            {children}
+          <QueryProvider>{children}</QueryProvider>
         </ThemeProvider>
           
         </body>
