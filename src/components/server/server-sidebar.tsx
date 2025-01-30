@@ -14,11 +14,11 @@ import { ServerSection } from "@/components/server/server-section";
 import { ServerChannel } from "@/components/server/server-channel";
 import { ServerMember } from "@/components/server/server-member";
 
-// const iconMap = {
-//   [ChannelType.TEXT]: <Hash className="mr-2 h-4 w-4" />,
-//   [ChannelType.AUDIO]: <Mic className="mr-2 h-4 w-4" />,
-//   [ChannelType.VIDEO]: <Video className="mr-2 h-4 w-4" />
-// };
+const iconMap = {
+  [ChannelType.TEXT]: <Hash className="mr-2 h-4 w-4" />,
+  [ChannelType.AUDIO]: <Mic className="mr-2 h-4 w-4" />,
+  [ChannelType.VIDEO]: <Video className="mr-2 h-4 w-4" />
+};
 
 const roleIconMap = {
   [MemberRole.GUEST]: null,
@@ -78,7 +78,7 @@ export async function ServerSidebar({ serverId }: { serverId: string }) {
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2b2d31] bg-[#f2f3f5]">
       <ServerHeader server={server} role={role} />
       <ScrollArea className="flex-1 px-3">
-        {/* <div className="mt-2">
+        <div className="mt-2">
           <ServerSearch
             data={[
               {
@@ -119,7 +119,7 @@ export async function ServerSidebar({ serverId }: { serverId: string }) {
               }
             ]}
           />
-        </div> */}
+        </div>
         <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
         {!!textChannels?.length && (
           <div className="mb-2">
@@ -187,6 +187,7 @@ export async function ServerSidebar({ serverId }: { serverId: string }) {
               sectionType="members"
               role={role}
               label="Members"
+              server={server}
             />
             <div className="space-y-[2px]">
               {members.map((member) => (

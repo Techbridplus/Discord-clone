@@ -11,9 +11,8 @@ interface InviteCodPageProps {
   };
 }
 
-export default async function InviteCodPage({
-  params: { inviteCode }
-}: InviteCodPageProps) {
+export default async function InviteCodPage({params}: InviteCodPageProps) {
+  const { inviteCode } = await params;
   const profile = await currentProfile();
   const { redirectToSignIn } = await auth();
   if (!profile) return redirectToSignIn();

@@ -1,14 +1,14 @@
 import React from "react";
-import { auth} from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { ChannelType } from "@prisma/client";
 
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-// import { ChatHeader } from "@/components/chat/chat-header";
-// import { ChatInput } from "@/components/chat/chat-input";
-// import { ChatMessages } from "@/components/chat/chat-messages";
-// import { MediaRoom } from "@/components/media-room";
+import { ChatHeader } from "@/components/chat/chat-header";
+import { ChatInput } from "@/components/chat/chat-input";
+import { ChatMessages } from "@/components/chat/chat-messages";
+import  MediaRoom  from "@/components/media-room";
 
 interface ChannelIdPageProps {
   params: {
@@ -17,11 +17,12 @@ interface ChannelIdPageProps {
   };
 }
 
-export default async function ChannelIdPage({ params }:ChannelIdPageProps) {
-  const { channelId, serverId } = await params;
-  const { redirectToSignIn } = await auth();
+export default async function ChannelIdPage({
+  params
+}: ChannelIdPageProps) {
+  const { serverId, channelId } = await params;
   const profile = await currentProfile();
-
+  const { redirectToSignIn } = await auth();
   if (!profile) return redirectToSignIn();
 
   const channel = await db.channel.findUnique({
@@ -35,8 +36,8 @@ export default async function ChannelIdPage({ params }:ChannelIdPageProps) {
   if (!channel || !member) return redirect("/");
 
   return (
-    <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
-      {/* <ChatHeader
+    <div className="bg-white dark:bg-[#313338] flex flex-col h-screen">
+      <ChatHeader
         name={channel.name}
         serverId={channel.serverId}
         type="channel"
@@ -73,7 +74,7 @@ export default async function ChannelIdPage({ params }:ChannelIdPageProps) {
       )}
       {channel.type === ChannelType.VIDEO && (
         <MediaRoom chatId={channel.id} video={true} audio={true} />
-      )} */}
+      )}
     </div>
   );
 }
