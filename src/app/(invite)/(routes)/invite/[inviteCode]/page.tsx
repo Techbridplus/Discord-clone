@@ -6,9 +6,9 @@ import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 
 interface InviteCodPageProps {
-  params: {
+  params: Promise<{
     inviteCode: string;
-  };
+  }>;
 }
 
 export default async function InviteCodPage({params}: InviteCodPageProps) {
