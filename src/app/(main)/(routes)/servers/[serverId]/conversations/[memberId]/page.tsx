@@ -16,9 +16,9 @@ interface MemberIdPageProps {
     memberId: string;
     serverId: string;
   }>;
-  searchParams: {
+  searchParams:Promise<{
     video?: boolean;
-  };
+  }>;
 }
 
 
