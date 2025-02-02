@@ -64,7 +64,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  context: { params: { channelId: string } }
+  params: { channelId: string },
 ) {
   try {
     const profile = await currentProfile();
@@ -74,7 +74,7 @@ export async function DELETE(
     const serverId = searchParams.get("serverId");
     if (!serverId)
       return new NextResponse("Server ID Missing", { status: 400 });
-    if (!context.params.channelId)
+    if (!params.channelId)
       return new NextResponse("Channel ID Missing", { status: 400 });
 
     const server = await db.server.update({
@@ -92,7 +92,7 @@ export async function DELETE(
       data: {
         channels: {
           delete: {
-            id: context.params.channelId,
+            id: params.channelId,
             name: {
               not: "general"
             }
