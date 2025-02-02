@@ -64,9 +64,10 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { channelId: string } }
+  context: { params: { channelId: string } }
 ) {
   try {
+    const { params } = context;
     const profile = await currentProfile();
     if (!profile) return new NextResponse("Unauthorized", { status: 401 });
 
@@ -103,7 +104,7 @@ export async function DELETE(
 
     return NextResponse.json(server);
   } catch (error) {
-    console.error("[CHANNEL_ID_DELETE", error);
+    console.error("[CHANNEL_ID_DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
