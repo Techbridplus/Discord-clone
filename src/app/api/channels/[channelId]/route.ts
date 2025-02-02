@@ -39,20 +39,18 @@ export async function PATCH(
       },
       data: {
         channels: {
-          updateMany: [
-            {
-              where: {
-                id: params.channelId,
-                name: {
-                  not: "general"
-                }
-              },
-              data: {
-                name,
-                type
+          update: {
+            where: {
+              id: params.channelId,
+              NOT: {
+                name: "general"
               }
+            },
+            data: {
+              name,
+              type
             }
-          ]
+          }
         }
       }
     });
@@ -64,48 +62,48 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { channelId: string } }
-) {
-  try {
-    const profile = await currentProfile();
-    if (!profile) return new NextResponse("Unauthorized", { status: 401 });
+// export async function DELETE(
+//   req: Request,
+//   { params }: { params: { channelId: string } }
+// ) {
+//   try {
+//     const profile = await currentProfile();
+//     if (!profile) return new NextResponse("Unauthorized", { status: 401 });
 
-    const { searchParams } = new URL(req.url);
-    const serverId = searchParams.get("serverId");
-    if (!serverId)
-      return new NextResponse("Server ID Missing", { status: 400 });
-    if (!params.channelId)
-      return new NextResponse("Channel ID Missing", { status: 400 });
+//     const { searchParams } = new URL(req.url);
+//     const serverId = searchParams.get("serverId");
+//     if (!serverId)
+//       return new NextResponse("Server ID Missing", { status: 400 });
+//     if (!params.channelId)
+//       return new NextResponse("Channel ID Missing", { status: 400 });
 
-    const server = await db.server.update({
-      where: {
-        id: serverId,
-        members: {
-          some: {
-            profileId: profile.id,
-            role: {
-              in: [MemberRole.ADMIN, MemberRole.MODERATOR]
-            }
-          }
-        }
-      },
-      data: {
-        channels: {
-          delete: {
-            id: params.channelId,
-            name: {
-              not: "general"
-            }
-          }
-        }
-      }
-    });
+//     const server = await db.server.update({
+//       where: {
+//         id: serverId,
+//         members: {
+//           some: {
+//             profileId: profile.id,
+//             role: {
+//               in: [MemberRole.ADMIN, MemberRole.MODERATOR]
+//             }
+//           }
+//         }
+//       },
+//       data: {
+//         channels: {
+//           delete: {
+//             id: params.channelId,
+//             name: {
+//               not: "general"
+//             }
+//           }
+//         }
+//       }
+//     });
 
-    return NextResponse.json(server);
-  } catch (error) {
-    console.error("[CHANNEL_ID_DELETE]", error);
-    return new NextResponse("Internal Error", { status: 500 });
-  }
-}
+//     return NextResponse.json(server);
+//   } catch (error) {
+//     console.error("[CHANNEL_ID_DELETE", error);
+//     return new NextResponse("Internal Error", { status: 500 });
+//   }
+// }
