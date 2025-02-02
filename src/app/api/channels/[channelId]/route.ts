@@ -5,21 +5,21 @@ import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 
 export async function PATCH(
-  req: Request,
-  { params }: { params: { channelId: string } }
+  request: NextRequest
 ) {
   try {
     const profile = await currentProfile();
     if (!profile) return new NextResponse("Unauthorized", { status: 401 });
 
-    const { searchParams } = new URL(req.url);
+    const searchParams = request.nextUrl.searchParams;
     const serverId = searchParams.get("serverId");
+    const channelId = searchParams.get("channelId");
     if (!serverId)
       return new NextResponse("Server ID Missing", { status: 400 });
-    if (!params.channelId)
+    if (!channelId)
       return new NextResponse("Channel ID Missing", { status: 400 });
 
-    const { name, type } = await req.json();
+    const { name, type } = await request.json();
     if (!name || !type || name === "general")
       return new NextResponse("Name / Type cannot be empty or general", {
         status: 400
@@ -41,7 +41,7 @@ export async function PATCH(
         channels: {
           update: {
             where: {
-              id: params.channelId,
+              id: channelId,
               NOT: {
                 name: "general"
               }
