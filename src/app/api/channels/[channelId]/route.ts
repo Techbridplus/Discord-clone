@@ -64,7 +64,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  params: { channelId: string },
+  { params }: { params: { channelId: string } }
 ) {
   try {
     const profile = await currentProfile();
