@@ -9,12 +9,13 @@ import { ChatHeader } from "@/components/chat/chat-header";
 import { ChatMessages } from "@/components/chat/chat-messages";
 import { ChatInput } from "@/components/chat/chat-input";
 import  MediaRoom  from "@/components/media-room";
+import { promises } from "dns";
 
 interface MemberIdPageProps {
-  params: {
+  params: Promise<{
     memberId: string;
     serverId: string;
-  };
+  }>;
   searchParams: {
     video?: boolean;
   };
