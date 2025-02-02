@@ -1,23 +1,22 @@
-import { NextResponse } from "next/server";
+import { NextResponse,NextRequest } from "next/server";
 
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 
 export async function DELETE(
-  req: Request,
-  { params }: { params: { memberId: string } }
+  request: NextRequest
 ) {
   try {
-    const { searchParams } = new URL(req.url);
-
     const profile = await currentProfile();
     if (!profile) return new NextResponse("Unauthorized", { status: 401 });
 
+    const searchParams = request.nextUrl.searchParams;
     const serverId = searchParams.get("serverId");
+    const memberId = searchParams.get("memberId");
     if (!serverId)
       return new NextResponse("Server ID Missing", { status: 400 });
 
-    if (!params.memberId)
+    if (!memberId)
       return new NextResponse("Member ID Missing", { status: 400 });
 
     const server = await db.server.update({
@@ -28,7 +27,7 @@ export async function DELETE(
       data: {
         members: {
           deleteMany: {
-            id: params.memberId,
+            id: memberId,
             profileId: {
               not: profile.id
             }
@@ -55,21 +54,24 @@ export async function DELETE(
 }
 
 export async function PATCH(
-  req: Request,
-  { params }: { params: { memberId: string } }
+  request: NextRequest
+
 ) {
   try {
-    const { searchParams } = new URL(req.url);
-    const { role } = await req.json();
+    
+    const { role } = await request.json();
 
     const profile = await currentProfile();
     if (!profile) return new NextResponse("Unauthorized", { status: 401 });
 
+    
+    const searchParams = request.nextUrl.searchParams;
     const serverId = searchParams.get("serverId");
+    const memberId = searchParams.get("memberId");
     if (!serverId)
       return new NextResponse("Server ID Missing", { status: 400 });
 
-    if (!params.memberId)
+    if (!memberId)
       return new NextResponse("Member ID Missing", { status: 400 });
 
     const server = await db.server.update({
@@ -81,7 +83,7 @@ export async function PATCH(
         members: {
           update: {
             where: {
-              id: params.memberId,
+              id: memberId,
               profileId: {
                 not: profile.id
               }

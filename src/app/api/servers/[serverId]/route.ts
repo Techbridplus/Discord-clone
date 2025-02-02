@@ -1,20 +1,22 @@
-import { NextResponse } from "next/server";
+import { NextResponse,NextRequest } from "next/server";
 
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 
 export async function PATCH(
-  req: Request,
-  { params }: { params: { serverId: string } }
+  request: NextRequest,
+
 ) {
   try {
     const profile = await currentProfile();
-    const { name, imageUrl } = await req.json();
+    const { name, imageUrl } = await request.json();
 
     if (!profile) return new NextResponse("Unauthorized", { status: 401 });
-
+    const searchParams = request.nextUrl.searchParams;
+    const serverId = searchParams.get("serverId");
+    if (!serverId) return new NextResponse("Server ID Missing", { status: 400 });
     const server = await db.server.update({
-      where: { id: params.serverId, profileId: profile.id },
+      where: { id: serverId, profileId: profile.id },
       data: { name, imageUrl }
     });
 
@@ -26,19 +28,19 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  req: Request,
-  { params }: { params: { serverId: string } }
+  request: NextRequest
 ) {
   try {
     const profile = await currentProfile();
 
     if (!profile) return new NextResponse("Unauthorized", { status: 401 });
-
-    if (!params.serverId)
+    const searchParams = request.nextUrl.searchParams;
+    const serverId = searchParams.get("serverId");
+    if (!serverId)
       return new NextResponse("Server ID Missing", { status: 400 });
 
     const server = await db.server.delete({
-      where: { id: params.serverId, profileId: profile.id }
+      where: { id: serverId, profileId: profile.id }
     });
 
     return NextResponse.json(server);
