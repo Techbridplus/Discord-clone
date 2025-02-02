@@ -39,18 +39,20 @@ export async function PATCH(
       },
       data: {
         channels: {
-          update: {
-            where: {
-              id: params.channelId,
-              NOT: {
-                name: "general"
+          updateMany: [
+            {
+              where: {
+                id: params.channelId,
+                name: {
+                  not: "general"
+                }
+              },
+              data: {
+                name,
+                type
               }
-            },
-            data: {
-              name,
-              type
             }
-          }
+          ]
         }
       }
     });
@@ -64,10 +66,9 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  context: { params: { channelId: string } }
+  { params }: { params: { channelId: string } }
 ) {
   try {
-    const { params } = context;
     const profile = await currentProfile();
     if (!profile) return new NextResponse("Unauthorized", { status: 401 });
 
